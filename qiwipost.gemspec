@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'qiwipost'
   s.version     = '0.0.1'
-  s.date        = '2012-09-20'
+  s.date        = Date.current.to_s(:db)
   s.summary     = "QiwiPost"
   s.description = "qiwipost.ru api gem"
   s.authors     = ["Leonid Batizhevsky"]

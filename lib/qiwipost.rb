@@ -10,4 +10,5 @@ module QiwiPost
 
   require_relative 'qiwi_post/client'
   require_relative 'qiwi_post/exeptions'
+  require_relative 'qiwi_post/postomat'
 end
