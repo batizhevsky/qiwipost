@@ -13,6 +13,7 @@ module QiwiPost
   require_relative 'qiwi_post/list_machines'
   require_relative 'qiwi_post/network'
   require_relative 'qiwi_post/postomat'
+  require_relative 'qiwi_post/package_status'
   require_relative 'qiwi_post/package'
 
 end

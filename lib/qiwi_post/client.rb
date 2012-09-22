@@ -58,7 +58,7 @@ module QiwiPost
     # 
     # @return Array Массив объектов QiwiPost::Postomat
     def list_machines_near_metro town, station
-      machines_xml = QiwiPost::ListMashines.new(self).list_machines_near_metro_row town, station
+      machines_xml = QiwiPost::ListMashines.new(self).list_machines_near_metro_row(town, station)
       QiwiPost::ListMashines.create_array_from machines_xml
     end
 
@@ -67,12 +67,47 @@ module QiwiPost
     #
     # @param  machine_id String Уникальный идентификатор терминала
     # 
-    # @return Array Массив объектов QiwiPost::Postomat
+    # @return Array Массив объектов {QiwiPost::Postomat}
     def find_machine_by_id machine_id
       machines_xml = QiwiPost::ListMashines.new(self).find_machine_by_id_row machine_id
       QiwiPost::ListMashines.create_array_from machines_xml
     end
 
+    # 
+    # Cтатус посылки 
+    # для расшифровки статусов используйте {QiwiPost::PackageStatus#status_list} 
+    # @param  packcode String Уникальный идентификатор посылки
+    # 
+    # @return Symbol Статус посылки
+    def get_package_status packcode
+      QiwiPost::PackageStatus.new(self).with_code(packcode)
+    end
+
+    
+    # 
+    # Получение информации о посылках
+    # @param  *filter Hash Параметры фильтрации(необязательные)
+    #  :status - Фильтрации по статусу. Используйте {QiwiPost::PackageStatus#status_list} 
+    #  :startdate - Начальная дата для формирования списка(формат: ГГГГ-ММ-ДД)
+    # :enddate - Конечная дата для формирования списка(формат: ГГГГ-ММ-ДД)
+    # :confirmed - Подтвержденные или не подтвержденные отпрадения (Boolean)
+    # 
+    # @return [type] [description]
+    def get_all_packages(*filter)
+      packages = QiwiPost::PackageStatus.new(self).all(filter)
+      #TODO Сделать парсинг в объекты
+    end
+
+    # 
+    # Получение информации о наложенных платежах
+    # @param  start_date String Начальная дата для формирования списка(необ)
+    # @param  end_date String Конечная дата для формирования списка(необ)
+    # 
+    # @return String Информация о наложенных платежах
+    def get_payment_info(start_date=nil, end_date=nil)
+      packages = QiwiPost::PackageStatus.new(self).payment_info(start_date, end_date)
+      #TODO Сделать парсинг в объекты
+    end
    
   end
 end

@@ -17,7 +17,7 @@ module QiwiPost
       format = args[:format]
       raise ArgumentError ":format must be :csv or :xml only" unless [:csv, :xml].include?(format )
       response = @network.post_and_get_response('listmachines_'+format.to_s)
-      error = find_error_in(response, 'paczkomaty')
+      error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error 
       return response
     end
@@ -30,7 +30,7 @@ module QiwiPost
     # @return String Возвращает ответ сервера (xml)
     def list_machines_near_poscode_row postcode
       response = @network.post_and_get_response("findnearestmachinesbypostcode&postcode=#{postcode}", postcode: postcode)
-      error = find_error_in(response, 'paczkomaty')
+      error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error 
       return response
     end
@@ -45,7 +45,7 @@ module QiwiPost
     def list_machines_near_metro_row town, station
       response = @network.post_and_get_response("findnearestmachinesbymetrostatnion&stationname=#{station}&town=#{town}", 
                               town: town, stationname: station)
-      error = find_error_in(response, 'paczkomaty')
+      error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error 
       return response
     end
@@ -58,7 +58,7 @@ module QiwiPost
     # @return String Возвращает ответ сервера (xml)
     def find_machine_by_id_row machine_id
       response = @network.post_and_get_response("findmachinebyname&name=#{machine_id}", name: machine_id)
-      error = find_error_in(response, 'paczkomaty')
+      error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error 
       return response
     end
@@ -95,14 +95,6 @@ module QiwiPost
         machines << postomat
       end
       return machines
-    end
-
-    private 
-
-    def find_error_in xml, root_element
-      document =  Nokogiri::XML(xml)
-      error = document.at_xpath("//#{root_element}/error")
-      error.text if error
     end
 
   end
