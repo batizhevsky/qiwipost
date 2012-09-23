@@ -9,6 +9,7 @@ module QiwiPost
 
 
   require_relative 'qiwi_post/client'
+  require_relative 'qiwi_post/delivery_package'
   require_relative 'qiwi_post/exeptions'
   require_relative 'qiwi_post/list_machines'
   require_relative 'qiwi_post/network'

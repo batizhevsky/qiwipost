@@ -13,6 +13,8 @@ module QiwiPost
     class SyntaxException < QiwiPostError; end
 
     class ErrorRecivedExecption < QiwiPostError; end
+
+    class ArgumentExecption < QiwiPostError; end
     
     def self.find_error_in xml, root_element
       document =  Nokogiri::XML(xml)

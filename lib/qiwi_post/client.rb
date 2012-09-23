@@ -95,7 +95,7 @@ module QiwiPost
     # @return [type] [description]
     def get_all_packages(*filter)
       packages = QiwiPost::PackageStatus.new(self).all(filter)
-      #TODO Сделать парсинг в объекты
+      QiwiPost::PackageStatus.to_array packages
     end
 
     # 
@@ -108,6 +108,10 @@ module QiwiPost
       packages = QiwiPost::PackageStatus.new(self).payment_info(start_date, end_date)
       #TODO Сделать парсинг в объекты
     end
-   
+
+    def create_delivery_packs(*params)
+      pack_info = params[0]
+
+    end
   end
 end

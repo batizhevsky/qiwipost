@@ -11,11 +11,10 @@ module QiwiPost
     # 
     # @return Symbol Статус посылки
     def with_code packcode
-      response = @network.post_and_get_response("fgetpackstatus&packcode=#{packcode}", packcode: packcode)
+      response = @network.post_and_get_response("getpackstatus&packcode=#{packcode}", packcode: packcode)
       error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
-      puts response
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
-      Nokogiri::XML(response).at_xpath('//at_xpath/status').text.to_s
+      Nokogiri::XML(response).at_xpath('//paczkomaty/status').text.to_sym
     end
 
     # 
@@ -27,9 +26,10 @@ module QiwiPost
     # :confirmed - Подтвержденные или не подтвержденные отпрадения (Boolean)
     # 
     # @return [type] [description]
-    def all *filter
-      #TODO: Сделать парсинг аргументов
-      response = @network.post_and_get_response("getpacksbysender")
+    def all args
+      filter = args[0]
+      is_conf_printed = filter[:confirmed] ? 1 : 0
+      response = @network.post_and_get_response("getpacksbysender", status: filter[:status], startdate: filter[:startdate], enddate: filter[:enddate], is_conf_printed: is_conf_printed)
       error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/customer')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
       return response
@@ -42,7 +42,6 @@ module QiwiPost
     # 
     # @return String Информация о наложенных платежах
     def payment_info(start_date=nil, end_date=nil)
-      #TODO: Сделать парсинг аргументов
       response = @network.post_and_get_response("getcodreport", startdate: start_date, enddate: end_date)
       error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/customer')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
@@ -70,6 +69,15 @@ module QiwiPost
         ReturnedTosender: "Посылка возвращена отправителю.",
         Cancelled: "Посылка аннулирована."
       }
+    end
+
+    def self.to_array xml
+      document = Nokogiri::XML(xml).root
+      packages = []
+      document.xpath("/paczkomaty/pack").each do |pack|
+        packages << QiwiPost::Package.to_package(pack)
+      end
+      return packages
     end
   end
 end

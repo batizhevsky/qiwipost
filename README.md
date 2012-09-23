@@ -17,8 +17,5 @@ gem 'qiwipost', git: 'git://github.com/leonko/qiwipost.git'
 
 * Замечания
 	QiwiPost при запросах нахождения постоматов не проверяет телефон/пароль на правильность
-	get_package_status не работает (сервер возвращает ошибку)
 	get_all_packages выдает 100 позиций(???)
 
-* TODO
-	get_all_packages пока не работаю фильтры
