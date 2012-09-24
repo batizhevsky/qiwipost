@@ -16,5 +16,6 @@ module QiwiPost
   require_relative 'qiwi_post/postomat'
   require_relative 'qiwi_post/package_status'
   require_relative 'qiwi_post/package'
+  require_relative 'qiwi_post/station'
 
 end

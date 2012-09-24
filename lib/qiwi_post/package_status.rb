@@ -28,8 +28,13 @@ module QiwiPost
     # @return [type] [description]
     def all args
       filter = args[0]
-      is_conf_printed = filter[:confirmed] ? 1 : 0
-      response = @network.post_and_get_response("getpacksbysender", status: filter[:status], startdate: filter[:startdate], enddate: filter[:enddate], is_conf_printed: is_conf_printed)
+      if filter
+        is_conf_printed = filter[:confirmed] ? 1 : 0 if filter
+        status = filter[:status]
+        startdate = filter[:startdate]
+        enddate = filter[:enddate]
+      end
+      response = @network.post_and_get_response("getpacksbysender", status: status, startdate: startdate, enddate: enddate, is_conf_printed: is_conf_printed)
       error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/customer')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
       return response
@@ -43,7 +48,7 @@ module QiwiPost
     # @return String Информация о наложенных платежах
     def payment_info(start_date=nil, end_date=nil)
       response = @network.post_and_get_response("getcodreport", startdate: start_date, enddate: end_date)
-      error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/customer')
+      error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
       return response
     end
