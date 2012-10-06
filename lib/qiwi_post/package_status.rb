@@ -31,8 +31,8 @@ module QiwiPost
       if filter
         is_conf_printed = filter[:confirmed] ? 1 : 0 if filter
         status = filter[:status]
-        startdate = filter[:startdate]
-        enddate = filter[:enddate]
+        startdate = filter[:startdate].strftime(DATEFORMAT) if filter[:startdate]
+        enddate = filter[:enddate].strftime(DATEFORMAT) if filter[:enddate]
       end
       response = @network.post_and_get_response("getpacksbysender", status: status, startdate: startdate, enddate: enddate, is_conf_printed: is_conf_printed)
       error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/customer')
@@ -47,6 +47,8 @@ module QiwiPost
     #
     # @return String Информация о наложенных платежах
     def payment_info(start_date=nil, end_date=nil)
+      start_date = start_date.strftime(DATEFORMAT) if start_date
+      end_date = end_date.strftime(DATEFORMAT) if end_date
       response = @network.post_and_get_response("getcodreport", startdate: start_date, enddate: end_date)
       error =  QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error

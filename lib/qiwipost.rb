@@ -1,8 +1,10 @@
 module QiwiPost
   API_URL = "https://api.qiwipost.ru"
   TEST_API_URL = "https://apitest.qiwipost.ru/"
+  DATEFORMAT = "%F"
 
   require 'rubygems'
+  require 'date'
   require 'net/http'
   require 'net/https'
   require 'nokogiri'

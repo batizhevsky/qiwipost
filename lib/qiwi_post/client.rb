@@ -89,11 +89,9 @@ module QiwiPost
     # @param  *filter Hash Параметры фильтрации
     #(необязательные)
     #  :status - Фильтрации по статусу. Используйте {QiwiPost::PackageStatus#status_list}
-    #  :startdate - Начальная дата для формирования списка(формат: ГГГГ-ММ-ДД)
-    #
-    #:enddate - Конечная дата для формирования списка(формат: ГГГГ-ММ-ДД)
-    #
-    #:confirmed - Подтвержденные или не подтвержденные отпрадения (Boolean)
+    #  :startdate Date Начальная дата для формирования списка
+    #  :enddate Date Конечная дата для формирования списка
+    #  :confirmed - Подтвержденные или не подтвержденные отпрадения (Boolean)
     #
     # @return [type] [description]
     def get_all_packages(*filter)
@@ -103,8 +101,8 @@ module QiwiPost
 
     #
     # Получение информации о наложенных платежах
-    # @param  start_date String Начальная дата для формирования списка(необ)
-    # @param  end_date String Конечная дата для формирования списка(необ)
+    # @param  start_date Date Начальная дата для формирования списка(необ)
+    # @param  end_date Date Конечная дата для формирования списка(необ)
     #
     # @return Array Информация о наложенных платежах. Массив объектов {QiwiPost::Payment}
     #
