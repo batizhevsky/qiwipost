@@ -4,7 +4,7 @@ module QiwiPost
                              :status, :is_conf_printed, :labelprinted,
                              :ondeliveryamount, :preferedboxmachinename,
                              :alternativeboxmachinename)
-    def self.to_package xml
+    def self.to_object xml
       pack = Package.new
       if (node = xml.at_xpath('packcode'))
         pack.packcode = node.text
@@ -45,6 +45,6 @@ module QiwiPost
       end
       return pack
     end
-    
+
   end
 end

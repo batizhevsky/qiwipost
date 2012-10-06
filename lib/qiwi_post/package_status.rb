@@ -5,10 +5,10 @@ module QiwiPost
       @network = QiwiPost::Network.new client
     end
 
-    # Cтатус посылки 
-    # для расшифровки статусов используйте {QiwiPost::PackageStatus#status_list} 
+    # Cтатус посылки
+    # для расшифровки статусов используйте {QiwiPost::PackageStatus#status_list}
     # @param  packcode String Уникальный идентификатор посылки
-    # 
+    #
     # @return Symbol Статус посылки
     def with_code packcode
       response = @network.post_and_get_response("getpackstatus&packcode=#{packcode}", packcode: packcode)
@@ -17,14 +17,14 @@ module QiwiPost
       Nokogiri::XML(response).at_xpath('//paczkomaty/status').text.to_sym
     end
 
-    # 
+    #
     # Получение информации о посылках
     # @param  *filter Hash Параметры фильтрации(необязательные)
-    #  :status - Фильтрации по статусу. Используйте {QiwiPost::PackageStatus#status_list} 
+    #  :status - Фильтрации по статусу. Используйте {QiwiPost::PackageStatus#status_list}
     #  :startdate - Начальная дата для формирования списка(формат: ГГГГ-ММ-ДД)
     # :enddate - Конечная дата для формирования списка(формат: ГГГГ-ММ-ДД)
     # :confirmed - Подтвержденные или не подтвержденные отпрадения (Boolean)
-    # 
+    #
     # @return [type] [description]
     def all args
       filter = args[0]
@@ -40,11 +40,11 @@ module QiwiPost
       return response
     end
 
-    # 
+    #
     # Получение информации о наложенных платежах
     # @param  start_date String Начальная дата для формирования списка(необ)
     # @param  end_date String Конечная дата для формирования списка(необ)
-    # 
+    #
     # @return String Информация о наложенных платежах
     def payment_info(start_date=nil, end_date=nil)
       response = @network.post_and_get_response("getcodreport", startdate: start_date, enddate: end_date)
@@ -53,9 +53,9 @@ module QiwiPost
       return response
     end
 
-    # 
+    #
     #  Статусы посылки
-    # 
+    #
     # @return Hash Ключ: Статус в QiwiPost, Значение: Разъяснение
     def self.status_list
       statuses = {
@@ -76,13 +76,20 @@ module QiwiPost
       }
     end
 
-    def self.to_array xml
+    def self.to_array xml, type
       document = Nokogiri::XML(xml).root
-      packages = []
-      document.xpath("/paczkomaty/pack").each do |pack|
-        packages << QiwiPost::Package.to_package(pack)
+      objects = []
+      case type
+      when Package
+        document.xpath("/paczkomaty/pack").each do |pack|
+          objects << QiwiPost::Package.to_object(pack)
+        end
+      when Payment
+        document.xpath("/paczkomaty/payment").each do |pack|
+          objects << QiwiPost::Payment.to_object(pack)
+        end
       end
-      return packages
+      return objects
     end
   end
 end

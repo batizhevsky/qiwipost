@@ -6,14 +6,15 @@ require 'lib/qiwipost'
 qiwipost = QiwiPost.new(number: '9876543210', password: 'test')
 
 # puts QiwiPost::PackageStatus.new(qiwipost).all
-#puts qiwipost.get_payment_info "2012-08-02", "2012-09-03"
+puts qiwipost.get_payment_info "2012-08-02", "2012-09-03"
+#puts qiwipost.get_all_packages
 
-puts qiwipost.get_all_metrostations 'Москва'
+#puts qiwipost.get_all_metrostations 'Москва'
 # # Prepared
 # 
 # 
 #puts qiwipost.list_machines
-# # 
+# #
 # pack = QiwiPost::DeliveryPackage.new
 # pack.id = 1
 # pack.adreseePhoneNumber= 9879689618
