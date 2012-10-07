@@ -121,6 +121,7 @@ module QiwiPost
     # в случае ошибки ErrorRecivedExecption
     def create_delivery_packs(autolabels, *packages)
       #TODO: Перенести куда нибудь
+      packages.flatten!
       raise QiwiPost::Exceptions::ArgumentExecption, "Должна быть хотя бы одна посылка" if packages.count < 1
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.paczkomaty {
@@ -181,6 +182,7 @@ module QiwiPost
     #
     # @return String PDF файл с распечаткой
     def confirm_printout test, *packcodes
+      packcodes.flatten!
       raise QiwiPost::Exceptions::ArgumentExecption, "Должна быть хотя бы одна посылка" if packcodes.count < 1
       builder = Nokogiri::XML::Builder.new do |xml|
         xml.paczkomaty {
