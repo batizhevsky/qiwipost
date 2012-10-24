@@ -15,11 +15,20 @@ module QiwiPost
     class ErrorRecivedExecption < QiwiPostError; end
 
     class ArgumentExecption < QiwiPostError; end
+
+    class BoxMachineNonOperating < QiwiPostError; end
     
     def self.find_error_in xml, root_element
       document =  Nokogiri::XML(xml)
       error = document.at_xpath("//#{root_element}/error")
-      error.text if error
+      if error
+        if error['key'] == "BoxMachineNonOperating"
+          raise QiwiPost::Exceptions::BoxMachineNonOperating, error.text
+        else
+          error.text
+        end
+      end
+        
     end
 
   end

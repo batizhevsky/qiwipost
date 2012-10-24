@@ -5,7 +5,7 @@ module QiwiPost
   # 
   class DeliveryPackage < Struct.new(:id, :adreseePhoneNumber, :senderPhoneNumber,
                              :boxMachineName, :packType, :onDeliveryAmount,
-                             :customerRef, :packcode, :calculatedcharge)
+                             :customerRef, :packcode, :calculatedcharge, :alternativeBoxMachineName)
 
     def error=(err)
       @error = err
@@ -49,6 +49,7 @@ module QiwiPost
           xml.packType self.packType
           xml.onDeliveryAmount self.onDeliveryAmount
           xml.customerRef self.customerRef
+          xml.alternativeBoxMachineName self.alternativeBoxMachineName
         }
       end
       builder.doc.root.to_xml

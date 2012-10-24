@@ -135,6 +135,8 @@ module QiwiPost
               xml.packType pack.packType
               xml.onDeliveryAmount pack.onDeliveryAmount
               xml.customerRef pack.customerRef
+              xml.alternativeBoxMachineName pack.alternativeBoxMachineName
+
             }
           end
         }
@@ -150,12 +152,13 @@ module QiwiPost
         pack.packcode = resp.at_xpath("packcode").text
         pack.calculatedcharge = resp.at_xpath("calculatedcharge").text
       end
-
+      # puts response.inspect
       error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty/pack')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
 
       return packages
     end
+
     #
     # Отмена создания посылки
     # @param  packcode Integer Уникальный код посылки
