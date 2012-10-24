@@ -202,14 +202,14 @@ module QiwiPost
 
     #
     # Получение ярлыка на посылку в формате PDF
-    # @param  packcode String Уникальный код посылки
+    # @param  packcode String or Array Уникальный код посылки
     # @param  label String Тип этикетки.
     # По умолчанию 3шт на А4
     # "A6P" - этикетка A6 книжной ориентации
     #
     # @return String PDF файл с этикетками
     def get_package_sticker packcode, label=nil
-      response = @network.post_and_get_response("getsticker", packcode: packcode, labelType: label)
+      response = @network.post_and_get_response("getsticker", 'packcode[]' => packcode, labelType: label)
       error = QiwiPost::Exceptions.find_error_in(response, 'paczkomaty')
       raise QiwiPost::Exceptions::ErrorRecivedExecption, error if error
       return response
